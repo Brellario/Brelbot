@@ -7,8 +7,6 @@ const token = process.env.TOKEN;
 
 const { QUESTIONS, CURRENT_PATCH } = require('./commands/utility/feedback');
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
