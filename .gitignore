@@ -141,3 +141,12 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# confidential information
+config.json
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
