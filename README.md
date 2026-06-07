@@ -1,0 +1,2 @@
+# Brelbot
+Personal discord bot
