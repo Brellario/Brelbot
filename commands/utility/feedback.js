@@ -4,7 +4,7 @@ const FORUM_CHANNEL_NAME = 'feedback-brelbot';
 const CURRENT_PATCH = 'v0.3.0';
 
 const QUESTIONS = [
-    'Was the game confusing? Did the tutorials explain the mechanics enough for you to understand?',
+    'Was the game easy enough to understand - i.e. did you have issues not knowing what to do? Do the tutorials need to be updated? etc.',
     'How was the pace of the game - too slow, too fast, or just right?',
     'How was the balancing of the game - too easy, too hard, or about right?',
     'How was the overall experience of playing this patch?',
