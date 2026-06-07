@@ -92,7 +92,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 await thread.send(QUESTIONS[questionIndex]);
                 questionIndex++;
             } else {
-                await thread.send('Thank you so much for your feedback! Feel free to continue to leave feedback in this channel for this patch — if you wish to leave feedback on a future patch, please use the `/feedback` command again.');
+                await thread.send('Thank you for feedback! Feel free to continue to use this channel for additional feedback or conversations on this patch. If you wish to leave feedback on a future patch, please use the `/feedback` command again.');
                 collector.stop();
             }
         });
