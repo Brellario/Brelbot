@@ -5,6 +5,7 @@ const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require(
 require('dotenv').config();
 const token = process.env.TOKEN;
 
+const { QUESTIONS, CURRENT_PATCH } = require('./commands/utility/feedback');
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -35,29 +36,61 @@ for (const folder of commandFolders) {
 }
 
 client.on(Events.InteractionCreate, async (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
-    const command = interaction.client.commands.get(interaction.commandName);
-    if (!command) {
-        console.error(`No command matching ${interaction.commandName} was found.`);
-        return;
-    }
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({
-                content: 'There was an error while executing this command!',
-                flags: MessageFlags.Ephemeral,
-            });
-        } else {
-            await interaction.reply({
-                content: 'There was an error while executing this command!',
-                flags: MessageFlags.Ephemeral,
-            });
+    if (interaction.isChatInputCommand()) {
+        const command = interaction.client.commands.get(interaction.commandName);
+        if (!command) {
+            console.error(`No command matching ${interaction.commandName} was found.`);
+            return;
+        }
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
+            } else {
+                await interaction.reply({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
+            }
         }
     }
-    console.log(interaction);
+
+    if (interaction.isModalSubmit() && interaction.customId === 'feedbackModal') {
+        const name = interaction.fields.getTextInputValue('nameInput');
+        const patch = interaction.fields.getTextInputValue('patchInput');
+
+        // Find the forum channel
+        const forumChannel = interaction.guild.channels.cache.find(
+            c => c.name === 'feedback-brelbot' && c.type === 15 // 15 = GuildForum
+        );
+
+        if (!forumChannel) {
+            await interaction.reply({ content: 'Could not find the feedback forum channel!', flags: MessageFlags.Ephemeral });
+            return;
+        }
+
+        // Create a forum post
+        const thread = await forumChannel.threads.create({
+            name: `${name} - ${patch}`,
+            message: { content: QUESTIONS[0] }
+        });
+
+        await interaction.reply({ content: `Thanks ${name}! Your feedback thread has been created. Please head over there to answer a few questions.`, flags: MessageFlags.Ephemeral });
+
+        // Collect answers one by one
+        let questionIndex = 1;
+
+        const collector = thread.createMessageCollector({ filter: m => !m.author.bot });
+
+        collector.on('collect', async () => {
+            if (questionIndex < QUESTIONS.length) {
+                await thread.send(QUESTIONS[questionIndex]);
+                questionIndex++;
+            } else {
+                await thread.send('Thank you so much for your feedback! Feel free to continue to leave feedback in this channel for this patch — if you wish to leave feedback on a future patch, please use the `/feedback` command again.');
+                collector.stop();
+            }
+        });
+    }
 });
 
 // Log in to Discord with your client's token
