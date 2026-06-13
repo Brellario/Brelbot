@@ -97,6 +97,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
             }
         });
     }
+    if (interaction.isModalSubmit() && interaction.customId === 'patchNotesModal') {
+        const version = interaction.fields.getTextInputValue('versionInput');
+        const added = interaction.fields.getTextInputValue('addedInput');
+        const changed = interaction.fields.getTextInputValue('changedInput');
+        const fixed = interaction.fields.getTextInputValue('fixedInput');
+
+        const embed = {
+            title: `Patch Notes — ${version}`,
+            color: 0x5865F2,
+            fields: [],
+            timestamp: new Date().toISOString()
+        };
+
+        if (added) embed.fields.push({ name: '✨ Added', value: added });
+        if (changed) embed.fields.push({ name: '🔧 Changed', value: changed });
+        if (fixed) embed.fields.push({ name: '🐛 Fixed', value: fixed });
+
+        await interaction.reply({ embeds: [embed] });
+    }
 });
 
 // Log in to Discord with your client's token
