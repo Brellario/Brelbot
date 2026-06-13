@@ -4,7 +4,7 @@ const FORUM_CHANNEL_NAME = 'feedback-brelbot';
 const CURRENT_PATCH = 'v0.3.0';
 
 const QUESTIONS = [
-    "Ty for making a feedback channel - this channel was made for feedback on version 0.3.0, is that correct?"
+    "Ty for making a feedback channel - this channel was made for feedback on version 0.3.0, is that correct?",
     'Was the game easy enough to understand - i.e. did you have issues not knowing what to do? Do the tutorials need to be updated? etc.',
     'How was the pace of the game - too slow, too fast, or just right?',
     'How was the balancing of the game - too easy, too hard, or about right?',
